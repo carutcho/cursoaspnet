@@ -11,9 +11,9 @@ namespace cursoaspnet.Controllers
 {
     public class DepartamentsController : Controller
     {
-        private readonly cursoaspnetContext _context;
+        private readonly CursoAspnetContext _context;
 
-        public DepartamentsController(cursoaspnetContext context)
+        public DepartamentsController(CursoAspnetContext context)
         {
             _context = context;
         }

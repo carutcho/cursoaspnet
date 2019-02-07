@@ -6,9 +6,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace cursoaspnet.Models
 {
-    public class cursoaspnetContext : DbContext
+    public class CursoAspnetContext : DbContext
     {
-        public cursoaspnetContext (DbContextOptions<cursoaspnetContext> options)
+        public CursoAspnetContext(DbContextOptions<CursoAspnetContext> options)
             : base(options)
         {
         }

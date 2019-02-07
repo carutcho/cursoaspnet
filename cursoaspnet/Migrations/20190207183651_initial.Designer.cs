@@ -7,7 +7,7 @@ using cursoaspnet.Models;
 
 namespace cursoaspnet.Migrations
 {
-    [DbContext(typeof(cursoaspnetContext))]
+    [DbContext(typeof(CursoAspnetContext))]
     [Migration("20190207183651_initial")]
     partial class initial
     {

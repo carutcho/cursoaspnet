@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using cursoaspnet.Models;
 using cursoaspnet.Data;
+using cursoaspnet.Services;
 
 namespace cursoaspnet {
     public class Startup {
@@ -32,11 +33,12 @@ namespace cursoaspnet {
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            services.AddDbContext<cursoaspnetContext>(options =>
-                options.UseMySql(Configuration.GetConnectionString("cursoaspnetContext"), builder =>
+            services.AddDbContext<CursoAspnetContext>(options =>
+                options.UseMySql(Configuration.GetConnectionString("CursoAspnetContext"), builder =>
                 builder.MigrationsAssembly("cursoaspnet")));
 
             services.AddScoped<SeedingService>();
+            services.AddScoped<SellerService>();
 
         }
 

@@ -7,7 +7,7 @@ using cursoaspnet.Models;
 
 namespace cursoaspnet.Migrations
 {
-    [DbContext(typeof(cursoaspnetContext))]
+    [DbContext(typeof(CursoAspnetContext))]
     partial class cursoaspnetContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

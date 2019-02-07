@@ -9,9 +9,9 @@ namespace cursoaspnet.Data {
 
     public class SeedingService {
 
-        private cursoaspnetContext _context;
+        private CursoAspnetContext _context;
 
-        public SeedingService(cursoaspnetContext context) {
+        public SeedingService(CursoAspnetContext context) {
             _context = context;
         }
 
