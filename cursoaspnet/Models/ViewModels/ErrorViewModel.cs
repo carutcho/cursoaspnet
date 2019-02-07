@@ -1,6 +1,6 @@
 using System;
 
-namespace cursoaspnet.Models {
+namespace cursoaspnet.Models.ViewModels {
     public class ErrorViewModel {
         public string RequestId { get; set; }
 
