@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using cursoaspnet.Models;
+using cursoaspnet.Data;
 
 namespace cursoaspnet {
     public class Startup {
@@ -34,12 +35,16 @@ namespace cursoaspnet {
             services.AddDbContext<cursoaspnetContext>(options =>
                 options.UseMySql(Configuration.GetConnectionString("cursoaspnetContext"), builder =>
                 builder.MigrationsAssembly("cursoaspnet")));
+
+            services.AddScoped<SeedingService>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env) {
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, SeedingService seedingService) {
             if (env.IsDevelopment()) {
                 app.UseDeveloperExceptionPage();
+                seedingService.Seed();
             } else {
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();

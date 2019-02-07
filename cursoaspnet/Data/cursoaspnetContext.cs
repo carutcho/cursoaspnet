@@ -13,6 +13,9 @@ namespace cursoaspnet.Models
         {
         }
 
-        public DbSet<cursoaspnet.Models.Departament> Departament { get; set; }
+        public DbSet<Departament> Departament { get; set; }
+        public DbSet<Seller> Seller { get; set; }
+        public DbSet<SallesRecord> SellesRecord { get; set; }
+
     }
 }
