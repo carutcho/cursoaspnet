@@ -6,6 +6,7 @@ using cursoaspnet.Models;
 using cursoaspnet.Models.ViewModels;
 using cursoaspnet.Services;
 using Microsoft.AspNetCore.Mvc;
+using cursoaspnet.Services.Exceptions;
 
 namespace cursoaspnet.Controllers
 {
@@ -74,6 +75,41 @@ namespace cursoaspnet.Controllers
             }
 
             return View(obj);
+        }
+
+        public IActionResult Edit(int? id) {
+
+            if (id == null) {
+                return NotFound();
+            }
+
+            var obj = _sellerServices.FindById(id.Value);
+            if (id == null) {
+                return NotFound();
+            }
+
+            List<Departament> departaments = _departamentServices.FindAll();
+            SellerFormViewModel viewModel = new SellerFormViewModel { Seller = obj, Departaments = departaments };
+            return View(viewModel);            
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(int id, Seller seller) {
+
+            if (id != seller.Id) {
+                return BadRequest();
+            }
+
+            try {
+                _sellerServices.Update(seller);
+                return RedirectToAction(nameof(Index));
+            }catch (NotFoundException) {
+                return NotFound();
+            }catch (DbConcurrencyException) {
+                return BadRequest();
+            }
+
         }
     }
 }
