@@ -36,6 +36,11 @@ namespace cursoaspnet.Controllers
         [HttpPost]
         [AutoValidateAntiforgeryToken]
         public IActionResult Create(Seller seller) {
+            if (!ModelState.IsValid) {
+                var departaments = _departamentServices.FindAll();
+                SellerFormViewModel viewModel = new SellerFormViewModel { Seller = seller, Departaments = departaments };
+                return View(viewModel);
+            }
             _sellerServices.Insert(seller);
             return RedirectToAction(nameof(Index));
         }
@@ -97,6 +102,13 @@ namespace cursoaspnet.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(int id, Seller seller) {
+
+            //Forcar validacao de backend com anotation, para evitar cadastro sem javascript validando.
+            if (!ModelState.IsValid) {
+                var departaments = _departamentServices.FindAll();
+                SellerFormViewModel viewModel = new SellerFormViewModel { Seller = seller, Departaments = departaments };
+                return View(viewModel);
+            }
 
             if (id != seller.Id) {
                 return RedirectToAction(nameof(Error), new { message = "Id miss match" });
