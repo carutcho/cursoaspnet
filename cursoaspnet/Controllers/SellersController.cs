@@ -7,6 +7,7 @@ using cursoaspnet.Models.ViewModels;
 using cursoaspnet.Services;
 using Microsoft.AspNetCore.Mvc;
 using cursoaspnet.Services.Exceptions;
+using System.Diagnostics;
 
 namespace cursoaspnet.Controllers
 {
@@ -42,13 +43,13 @@ namespace cursoaspnet.Controllers
         public IActionResult Delete(int? id) {
 
             if (id == null) {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new {message = "Id not provided"});
             }
 
             var obj = _sellerServices.FindById(id.Value);
 
             if (obj == null) {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Id not found" });
             }
 
             return View(obj);
@@ -65,13 +66,13 @@ namespace cursoaspnet.Controllers
         public IActionResult Details(int? id) {
 
             if (id == null) {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Id not provided" });
             }
 
             var obj = _sellerServices.FindById(id.Value);
 
             if (obj == null) {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Id not found" });
             }
 
             return View(obj);
@@ -80,12 +81,12 @@ namespace cursoaspnet.Controllers
         public IActionResult Edit(int? id) {
 
             if (id == null) {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Id not provided" });
             }
 
             var obj = _sellerServices.FindById(id.Value);
-            if (id == null) {
-                return NotFound();
+            if (obj == null) {
+                return RedirectToAction(nameof(Error), new { message = "Id not found" });
             }
 
             List<Departament> departaments = _departamentServices.FindAll();
@@ -98,18 +99,26 @@ namespace cursoaspnet.Controllers
         public IActionResult Edit(int id, Seller seller) {
 
             if (id != seller.Id) {
-                return BadRequest();
+                return RedirectToAction(nameof(Error), new { message = "Id miss match" });
             }
 
             try {
                 _sellerServices.Update(seller);
                 return RedirectToAction(nameof(Index));
-            }catch (NotFoundException) {
-                return NotFound();
-            }catch (DbConcurrencyException) {
-                return BadRequest();
+            }catch (ApplicationException e) {
+                return RedirectToAction(nameof(Error), new { message = e.Message });
             }
 
         }
+
+       public IActionResult Error (string message) {
+
+            var viewModel = new ErrorViewModel {
+                Message = message,
+                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
+            };
+
+            return View(viewModel);
+       }
     }
 }
