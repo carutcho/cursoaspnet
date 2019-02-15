@@ -13,6 +13,7 @@ namespace cursoaspnet.Models {
         public DateTime BirthDate { get; set; }
         public double BaseSalary { get; set; }
         public Departament Departament { get; set; }
+        public int DepartamentId { get; set; }
         public ICollection<SallesRecord> Sellers { get; set; } = new List<SallesRecord>();
 
 
