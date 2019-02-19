@@ -22,36 +22,36 @@ namespace cursoaspnet.Controllers
             _departamentServices = departamentService;
         }
 
-        public IActionResult Index(){
-            var list = _sellerServices.findAll();
+        public async Task<IActionResult> Index(){
+            var list = await _sellerServices.findAllAsync();
             return View(list);
         }
 
-        public IActionResult Create() {
-            var departaments = _departamentServices.FindAll();
+        public async Task<IActionResult> Create() {
+            var departaments = await _departamentServices.FindAllAsync();
             var viewModel = new SellerFormViewModel { Departaments = departaments };
             return View(viewModel);
         }
 
         [HttpPost]
         [AutoValidateAntiforgeryToken]
-        public IActionResult Create(Seller seller) {
+        public async Task<IActionResult> Create(Seller seller) {
             if (!ModelState.IsValid) {
-                var departaments = _departamentServices.FindAll();
+                var departaments = await _departamentServices.FindAllAsync();
                 SellerFormViewModel viewModel = new SellerFormViewModel { Seller = seller, Departaments = departaments };
                 return View(viewModel);
             }
-            _sellerServices.Insert(seller);
+            await _sellerServices.InsertAsync(seller);
             return RedirectToAction(nameof(Index));
         }
 
-        public IActionResult Delete(int? id) {
+        public async Task<IActionResult> Delete(int? id) {
 
             if (id == null) {
                 return RedirectToAction(nameof(Error), new {message = "Id not provided"});
             }
 
-            var obj = _sellerServices.FindById(id.Value);
+            var obj = await _sellerServices.FindByIdAsync(id.Value);
 
             if (obj == null) {
                 return RedirectToAction(nameof(Error), new { message = "Id not found" });
@@ -62,19 +62,23 @@ namespace cursoaspnet.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Delete(int id) {
+        public async Task<IActionResult> Delete(int id) {
 
-            _sellerServices.Remove(id);
-            return RedirectToAction(nameof(Index));
+            try {
+                await _sellerServices.RemoveAsync(id);
+                return RedirectToAction(nameof(Index));
+            } catch (ApplicationException e) {
+                return RedirectToAction(nameof(Error), new { message = e.Message });
+            }
         }
 
-        public IActionResult Details(int? id) {
+        public async Task<IActionResult> Details(int? id) {
 
             if (id == null) {
                 return RedirectToAction(nameof(Error), new { message = "Id not provided" });
             }
 
-            var obj = _sellerServices.FindById(id.Value);
+            var obj = await _sellerServices.FindByIdAsync(id.Value);
 
             if (obj == null) {
                 return RedirectToAction(nameof(Error), new { message = "Id not found" });
@@ -83,29 +87,29 @@ namespace cursoaspnet.Controllers
             return View(obj);
         }
 
-        public IActionResult Edit(int? id) {
+        public async Task<IActionResult> Edit(int? id) {
 
             if (id == null) {
                 return RedirectToAction(nameof(Error), new { message = "Id not provided" });
             }
 
-            var obj = _sellerServices.FindById(id.Value);
+            var obj = await _sellerServices.FindByIdAsync(id.Value);
             if (obj == null) {
                 return RedirectToAction(nameof(Error), new { message = "Id not found" });
             }
 
-            List<Departament> departaments = _departamentServices.FindAll();
+            List<Departament> departaments = await _departamentServices.FindAllAsync();
             SellerFormViewModel viewModel = new SellerFormViewModel { Seller = obj, Departaments = departaments };
             return View(viewModel);            
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, Seller seller) {
+        public async Task<IActionResult> Edit(int id, Seller seller) {
 
             //Forcar validacao de backend com anotation, para evitar cadastro sem javascript validando.
             if (!ModelState.IsValid) {
-                var departaments = _departamentServices.FindAll();
+                var departaments = await _departamentServices.FindAllAsync();
                 SellerFormViewModel viewModel = new SellerFormViewModel { Seller = seller, Departaments = departaments };
                 return View(viewModel);
             }
@@ -115,7 +119,7 @@ namespace cursoaspnet.Controllers
             }
 
             try {
-                _sellerServices.Update(seller);
+                await _sellerServices.UpdateAsync(seller);
                 return RedirectToAction(nameof(Index));
             }catch (ApplicationException e) {
                 return RedirectToAction(nameof(Error), new { message = e.Message });

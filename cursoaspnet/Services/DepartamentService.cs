@@ -2,7 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Threading.Tasks; //Permitir criar tasks asyncronas
+using Microsoft.EntityFrameworkCore; //Adicionado pois o ListAsync eh do entity framework
 
 namespace cursoaspnet.Services {
 
@@ -14,8 +15,9 @@ namespace cursoaspnet.Services {
             _context = context;
         }
 
-        public List<Departament> FindAll() {
-            return _context.Departament.OrderBy(X => X.Name).ToList();
+        //Criar uma chamada assincrona usando task e listasync
+        public async Task<List<Departament>> FindAllAsync() {
+            return await _context.Departament.OrderBy(X => X.Name).ToListAsync();
         }
     }
 }
